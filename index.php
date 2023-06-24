@@ -2,8 +2,8 @@
     require 'config.php';
     if(isset($_POST['submit'])){
         $username = $_POST['username'];
-        $password = $_post['password'];
-        $conn->query("SELECT from user WHERE username = '$username';");
+        $password = $_POST['password'];
+        $conn->query("SELECT * from user WHERE username = '$username';");
         if(mysqli_affected_rows($conn) > 0){
             echo "username already exist";
         }else{
