@@ -4,8 +4,8 @@
     require 'config.php';
     if(isset($_POST['submit'])){
         $username = $_POST['username'];
-        $password = $_post['password'];
-        $data = $conn->query("SELECT from user WHERE username = '$username';");
+        $password = $_POST['password'];
+        $data = $conn->query("SELECT * from user WHERE username = '$username';");
         if(mysqli_affected_rows($conn) > 0){
             $user = $data->fetch_assoc();
             if(password_verify($password, $user['password'])){
