@@ -1,18 +1,25 @@
 <?php
-    require 'config.php';
+    session_start();
 
+    require 'config.php';
     if(isset($_POST['submit'])){
         $username = $_POST['username'];
         $password = $_POST['password'];
         $conn = new Dbh();
-
-        $stmt = $conn->connect()->prepare("SELECT * from user WHERE username = '$username';");
+        $stmt = $conn->connect()->prepare("SELECT * from user WHERE username = :username");
+        $stmt->bindParam(":username",$username);
+        $stmt->execute();
         if($stmt->rowCount() > 0){
-            echo "username already exist";
+            $user = $stmt->fetch();
+            if(password_verify($password, $user['password'])){
+                $_SESSION['id'] = $user['id'];
+                header("location: products.php");
+            }else{
+                echo 'wrong password';
+            }
+
         }else{
-            $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->connect()->prepare("INSERT INTO user VALUES('$username', '$hashedpassword');");
-            header("location: userpage.php");
+            echo "Username not exitsr";
         }
     }
 
@@ -25,7 +32,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="bocchi.jpg" type="image/x-icon">
-    <title>Sign Up</title>
+    <title>Log in</title>
 </head>
 <body>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
