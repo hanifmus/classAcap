@@ -12,6 +12,7 @@
         }else{
             $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->connect()->prepare("INSERT INTO user VALUES('$username', '$hashedpassword');");
+            header("location: userpage.php");
         }
     }
 
