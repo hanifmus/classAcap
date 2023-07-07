@@ -1,14 +1,17 @@
 <?php
     require 'config.php';
+
     if(isset($_POST['submit'])){
         $username = $_POST['username'];
         $password = $_POST['password'];
-        $conn->query("SELECT * from user WHERE username = '$username';");
-        if(mysqli_affected_rows($conn) > 0){
+        $conn = new Dbh();
+
+        $stmt = $conn->connect()->prepare("SELECT * from user WHERE username = '$username';");
+        if($stmt->rowCount() > 0){
             echo "username already exist";
         }else{
             $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-            $conn->query("INSERT INTO user VALUES('$username', '$hashedpassword');");
+            $stmt = $conn->connect()->prepare("INSERT INTO user VALUES('$username', '$hashedpassword');");
         }
     }
 
